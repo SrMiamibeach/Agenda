@@ -7,7 +7,7 @@
 
 <body>
     <?php
-    class agenda
+    class agenda3
     {
         private $agenda = array();
 
@@ -33,7 +33,7 @@
     }
     ?>
     <?php
-    $obj = new agenda();
+    $obj = new agenda3();
     $obj->añadirContacto('Aaron', 'aaron@gmail.com');
     $obj->añadirContacto('Maida', 'maida@gmail.com');
     $obj->añadirContacto('maida', 'maida@gmail.com');
