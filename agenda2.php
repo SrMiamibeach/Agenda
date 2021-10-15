@@ -55,7 +55,7 @@
         $name = $_POST['nombre'];
         if (isset($_POST['email']) && !empty($_POST['email'])) {
             $email = $_POST['email'];
-            añadirContacto($name, $email);
+            $obj->añadirContacto($name, $email);
             echo '<h4>Correo valido</h4>';
         } else {
             echo '<h4>Correo no valido</h4>';
