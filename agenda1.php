@@ -115,11 +115,11 @@
 
     <form method="POST">
         <label>Nombre:</label><br>
-        <input type="text" name="nombre" value=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?> ><br>
+        <input type="text" name="nombre" value="".<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?>."" /><br>
         <label>Email:</label><br>
-        <input type="email" name="email" value=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?> ><br>
+        <input type="email" name="email" value="".<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>."" /><br>
         <input type="submit" />
-        <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
+        <input type="hidden" name="array" value="".<?php echo $obj->setAgenda(); ?>."" />
     </form>
     <?php
     echo $result;
