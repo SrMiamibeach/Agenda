@@ -6,14 +6,7 @@
 </head>
 
 <body>
-    <form method="POST">
-        <label>Nombre:</label><br>
-        <input type="text" name="nombre" /><br>
-        <label>Email:</label><br>
-        <input type="email" name="email" /><br>
-        <input type="submit" />
-        <!--<input type="hidden" name="array" value=<?php $array ?> />-->
-    </form>
+    
     <?php
     class agenda1
     {
@@ -22,22 +15,22 @@
         {
             if ($array == null) {
                 $this->agenda = array();
+                echo 'crea';
             } else {
-                $this->agenda = json_decode($_POST['array']);
+                $this->agenda = (array)json_decode($_POST['array'],true);
+                echo 'carga';
             }
         }
 
         public function añadirContacto($nombre, $email)
         {
-            if (!$this->keyExist($nombre, $this->agenda)) {
-                $agenda[$nombre] = $email;
+            if (!$this->keyExist($nombre)) {
+                $this->agenda[$nombre] = $email;
             }
-            print_r($agenda);
         }
-        private function keyExist($nombre, $agenda)
+        private function keyExist($nombre)
         {
-
-            $keys = array_keys($agenda);
+            $keys = array_keys($this->agenda);
             foreach ($keys as $key) {
                 if (strtolower($key) == strtolower($nombre)) {
                     return true;
@@ -48,7 +41,12 @@
         public function setAgenda()
         {
             $string = json_encode($this->agenda);
-            echo '<input type="hidden" name="array" value='. $string.' />';
+            return $string;
+        }
+        public function seeArray(){
+            foreach($this->agenda as $key => $value ){
+                echo $key.' / '.$value;
+            }
         }
     }
     ?>
@@ -75,10 +73,16 @@
             }
         }
     }
-    $obj->setAgenda();
-    
-    
+    $obj->seeArray();
     ?>
+    <form method="POST">
+        <label>Nombre:</label><br>
+        <input type="text" name="nombre" /><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" /><br>
+        <input type="submit" />
+        <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
+    </form>
 </body>
 
 </html>
