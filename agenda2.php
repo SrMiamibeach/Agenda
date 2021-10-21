@@ -20,21 +20,21 @@
                 $this->agenda = $cookie;
             }
         }
-
+        // Añadir un contacto nuevo a la agenda
         public function addContact($nombre, $email)
         {
             $keyExit = $this->keyExist($nombre);
             $checkEmail = $this->checkEmail($email);
             if (!$keyExit && $checkEmail) {
                 $this->agenda[$nombre] = $email;
-                return 'Añadido correctamente';
+                return '<h4>Añadido correctamente</h4>';
             } else if ($keyExit && $checkEmail) {
                 $this->agenda[$nombre] = $email;
-                return 'Se a actualizado el correo';
+                return '<h4>Se a actualizado el correo</h4>';
             } else if (!$checkEmail) {
-                return 'El correo no tiene un formato correcto';
+                return '<h4>El correo no tiene un formato correcto</h4>';
             } else {
-                return 'Todo mal';
+                return '<h4>Todo mal</h4>';
             }
         }
         // comprobar si un nombre existe
@@ -67,7 +67,13 @@
         {
             if ($this->keyExist($name)) {
                 unset($this->agenda[$name]);
+                return '<h4>Contacto eliminado</h4>';
             }
+            return '<h4>No existe ese contacto</h4>';
+        }
+        public function setAgenda()
+        {
+            setcookie('agenda',json_encode($this->agenda),0);
         }
         public function seeArray()
         {
@@ -81,11 +87,7 @@
     }
     ?>
     <?php
-    
-    // $obj->añadirContacto('Aaron', 'aaron@gmail.com');
-    // $obj->añadirContacto('Maida', 'maida@gmail.com');
-    // $obj->añadirContacto('maida', 'maida@gmail.com');
-    // $obj->añadirContacto('AARóN', 'maida@gmail.com');
+    $result = '';
     if(!isset($_COOKIE['agenda'])){
         echo 'crea';
         $obj = new agenda2();
@@ -101,12 +103,11 @@
                 $result = $obj->addContact($name, $email);
                 $result =  '<h4>' . $result . '</h4>';
             } else {
-                $obj->deleteContact($name);
-                $result = '<h4>Contacto eliminado</h4>';
+                $result = $obj->deleteContact($name);;
             }
         }
     }
-    
+    $obj->setAgenda();
     ?>
 
     <?php
@@ -125,10 +126,12 @@
         <input type="text" name="nombre" />
         <label>Email</label>
         <input type="email" name="email" />
-        <input type="submit" />
+        <input type="submit" name="submit" />
     </form>
     <?php
-    echo $result;
+    if(isset($_POST['submit'])){
+        echo $result;
+    }
     $obj->seeArray();
 
     ?>
