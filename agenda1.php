@@ -87,10 +87,6 @@
     ?>
 
     <?php
-    /*añadirContacto('Aaron', 'aaron@gmail.com');
-    añadirContacto('Maida', 'maida@gmail.com');
-    añadirContacto('maida', 'maida@gmail.com');
-    añadirContacto('AARóN', 'maida@gmail.com');*/
     $result = '';
     if (!isset($_POST['array'])) {
         $obj = new agenda1();

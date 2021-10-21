@@ -11,23 +11,33 @@
     {
         private $agenda = array();
 
-        public function __construct()
+        public function __construct($cookie = null)
         {
-            if(!isset($_COOKIE['agenda'])){
+            if ($cookie == null) {
                 $this->agenda = array();
                 setcookie('agenda', json_encode($this->agenda), 0);
-            }else
-            {
-                $this->agenda = json_decode($_COOKIE['cumples'], true);
+            } else {
+                $this->agenda = $cookie;
             }
         }
 
-        public function añadirContacto($nombre, $email)
+        public function addContact($nombre, $email)
         {
-            if (!$this->keyExist($nombre)) {
+            $keyExit = $this->keyExist($nombre);
+            $checkEmail = $this->checkEmail($email);
+            if (!$keyExit && $checkEmail) {
                 $this->agenda[$nombre] = $email;
-            } 
+                return 'Añadido correctamente';
+            } else if ($keyExit && $checkEmail) {
+                $this->agenda[$nombre] = $email;
+                return 'Se a actualizado el correo';
+            } else if (!$checkEmail) {
+                return 'El correo no tiene un formato correcto';
+            } else {
+                return 'Todo mal';
+            }
         }
+        // comprobar si un nombre existe
         private function keyExist($nombre)
         {
             $keys = array_keys($this->agenda);
@@ -38,31 +48,78 @@
             }
             return false;
         }
-        public function a(){
-            return $this->agenda;
+        // Compruebar el email con funciones de php
+        private function checkEmail($email)
+        {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return true;
+            }
+            return false;
+        }
+        // Compruebar el email pero con expresiones regulares
+        // private function checkEmail($email) {
+        //     $regex = '/[a-zA-Z0-9_\-\.\+]+@[a-zA-Z0-9-]+.[a-zA-Z]+/';
+        //     return (bool)preg_match($regex, $email);
+        // }
+
+        // Elimina de la agenda el contacto que le introducimos
+        public function deleteContact($name)
+        {
+            if ($this->keyExist($name)) {
+                unset($this->agenda[$name]);
+            }
+        }
+        public function seeArray()
+        {
+            $string = '<table><tr><td style=font-weight:bold;>Nombre</td><td style=font-weight:bold;>Correo</td></tr>';
+            foreach ($this->agenda as $key => $value) {
+                $string .= '<tr><td>' . $key . '</td><td>' . $value . '</td></tr>';
+            }
+            $string .= '</table>';
+            echo $string;
         }
     }
     ?>
     <?php
-    $obj = new agenda2();
-    $obj->añadirContacto('Aaron', 'aaron@gmail.com');
-    $obj->añadirContacto('Maida', 'maida@gmail.com');
-    $obj->añadirContacto('maida', 'maida@gmail.com');
-    $obj->añadirContacto('AARóN', 'maida@gmail.com');
-    if (!isset($_POST['nombre']) && empty($_POST['nombre'])) {
-        echo '<h4 style=color:red;>El nombre esta vacio</h4>';
-    } else {
-        $name = $_POST['nombre'];
-        if (isset($_POST['email']) && !empty($_POST['email'])) {
-            $email = $_POST['email'];
-            $obj->añadirContacto($name, $email);
-            echo '<h4>Correo valido</h4>';
+    
+    // $obj->añadirContacto('Aaron', 'aaron@gmail.com');
+    // $obj->añadirContacto('Maida', 'maida@gmail.com');
+    // $obj->añadirContacto('maida', 'maida@gmail.com');
+    // $obj->añadirContacto('AARóN', 'maida@gmail.com');
+    if(!isset($_COOKIE['agenda'])){
+        echo 'crea';
+        $obj = new agenda2();
+    }else{
+        echo 'carga';
+        $obj = new agenda2(json_decode($_COOKIE['agenda'], true));
+        if (empty($_POST['nombre'])) {
+            $result = '<h4 style=color:red;>El nombre esta vacio</h4>';
         } else {
-            echo '<h4>Correo no valido</h4>';
+            $name = htmlentities($_POST['nombre']);
+            if (isset($_POST['email']) && !empty($_POST['email'])) {
+                $email = htmlentities($_POST['email']);
+                $result = $obj->addContact($name, $email);
+                $result =  '<h4>' . $result . '</h4>';
+            } else {
+                $obj->deleteContact($name);
+                $result = '<h4>Contacto eliminado</h4>';
+            }
         }
     }
-    print_r($obj->a());
+    
     ?>
+
+    <?php
+    $user = "";
+    if (!isset($_COOKIE['username'])) {
+        setcookie('username', htmlentities($_POST['username']));
+        $user = htmlentities($_POST['username']);
+    } else {
+        $user = $_COOKIE['username'];
+        echo $user;
+    }
+    ?>
+    <h1>Esta es la agenda de <?php echo $user; ?></h1>
     <form method="POST">
         <label>Nombre:</label>
         <input type="text" name="nombre" />
@@ -70,6 +127,11 @@
         <input type="email" name="email" />
         <input type="submit" />
     </form>
+    <?php
+    echo $result;
+    $obj->seeArray();
+
+    ?>
 </body>
 
 </html>
