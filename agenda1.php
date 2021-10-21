@@ -27,8 +27,9 @@
             if (!$keyExit && $checkEmail) {
                 $this->agenda[$nombre] = $email;
                 return 'Añadido correctamente';
-            } else if ($keyExit) {
-                return 'El contacto ya existe';
+            } else if ($keyExit && $checkEmail) {
+                $this->agenda[$nombre] = $email;
+                return 'Se a actualizado el correo';
             } else if (!$checkEmail) {
                 return 'El correo no tiene un formato correcto';
             } else {
@@ -38,7 +39,6 @@
         // comprobar si un nombre existe
         private function keyExist($nombre)
         {
-            
             $keys = array_keys($this->agenda);
             foreach ($keys as $key) {
                 if (strtolower($key) == strtolower($nombre)) {
@@ -57,7 +57,7 @@
         }
         // Comprobar el email pero con expresiones regulares
         // private function checkEmail($email) {
-        //     $regex = '/[a-zA-Z0-9_\-\.\+]+[a-zA-Z0-9-]+.[a-zA-Z]+/';
+        //     $regex = '/[a-zA-Z0-9_\-\.\+]+@[a-zA-Z0-9-]+.[a-zA-Z]+/';
         //     return (bool)preg_match($regex, $email);
         // }
 
@@ -111,20 +111,23 @@
         }
     }
     ?>
-    <h1>Esta es la agenda de <?php echo $_POST['user']?></h1>
+    <?php
+        $user = "";
+        if(isset($_POST['username'])){
+            $user = htmlentities($_POST['username']);
+        }else{
+            $user = $_POST['user'];
+        }
+    ?>
+    <h1>Esta es la agenda de <?php echo $user ;?></h1>
     <form method="POST">
         <label>Nombre:</label><br>
-<<<<<<< HEAD
-        <input type="text" name="nombre" value=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ""; ?> ><br>
-        <label>Email:</label><br>
-        <input type="email" name="email" value=<?php echo isset($_POST['email']) ? $_POST['email'] : ""; ?> ><br>
-=======
         <input type="text" name="nombre" value=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?> ><br>
         <label>Email:</label><br>
         <input type="email" name="email" value=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?> ><br>
->>>>>>> 0c832e2ee0a2bdcdf44454100a3369396c8a4938
         <input type="submit" />
         <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
+        <input type="hidden" name="user" value=<?php echo $user ;?> />
     </form>
     <?php
     echo $result;
