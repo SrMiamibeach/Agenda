@@ -24,11 +24,11 @@
         {
             $keyExit = $this->keyExist($nombre);
             $checkEmail = $this->checkEmail($email);
-            if (!$keyExit && $checkEmail) {
+            if ($keyExit == null && $checkEmail) {
                 $this->agenda[$nombre] = $email;
                 return 'Añadido correctamente';
-            } else if ($keyExit && $checkEmail) {
-                $this->agenda[$nombre] = $email;
+            } else if ($keyExit != null && $checkEmail) {
+                $this->agenda[$keyExit] = $email;
                 return 'Se a actualizado el correo';
             } else if (!$checkEmail) {
                 return 'El correo no tiene un formato correcto';
@@ -42,10 +42,10 @@
             $keys = array_keys($this->agenda);
             foreach ($keys as $key) {
                 if (strtolower($key) == strtolower($nombre)) {
-                    return true;
+                    return $key;
                 }
             }
-            return false;
+            return null;
         }
         // Comprovar el email con funciones de php
         private function checkEmail($email)
