@@ -19,7 +19,7 @@
                 $this->agenda = json_decode($_POST['array'], true);
             }
         }
-        // Añadir un contacto nuevo a la agenda
+        // Añadir un contacto nuevo a la agenda o editar el contacto
         public function addContact($nombre, $email)
         {
             $keyExit = $this->keyExist($nombre);
@@ -36,7 +36,7 @@
                 return '<h4>Todo mal</h4>';
             }
         }
-        // comprobar si un nombre existe
+        // comprueba si un nombre existe
         private function keyExist($nombre)
         {
             $keys = array_keys($this->agenda);
@@ -47,7 +47,7 @@
             }
             return null;
         }
-        // Comprovar el email con funciones de php
+        // Comprueba el email con funciones de php
         private function checkEmail($email)
         {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -55,13 +55,13 @@
             }
             return false;
         }
-        // Comprobar el email pero con expresiones regulares
+        // Comprueba el email pero con expresiones regulares
         // private function checkEmail($email) {
         //     $regex = '/[a-zA-Z0-9_\-\.\+]+@[a-zA-Z0-9-]+.[a-zA-Z]+/';
         //     return (bool)preg_match($regex, $email);
         // }
 
-        // Elimina de la agenda contacto que le introducimos
+        // Elimina de la agenda el contacto que le introducimos
         public function deleteContact($name)
         {
             if ($this->keyExist($name)) {
@@ -76,6 +76,7 @@
             $string = json_encode($this->agenda);
             return $string;
         }
+        // metodo para ver el array
         public function seeArray()
         {
             $string = '<table><tr><td style=font-weight:bold;>Nombre</td><td style=font-weight:bold;>Correo</td></tr>';
@@ -108,25 +109,26 @@
     }
     ?>
     <?php
-        $user = "";
-        if(isset($_POST['username'])){
-            $user = htmlentities($_POST['username']);
-        }else{
-            $user = $_POST['user'];
-        }
+    // guardamos el nombre que introduce el usuario
+    $user = "";
+    if (isset($_POST['username'])) {
+        $user = htmlentities($_POST['username']);
+    } else {
+        $user = $_POST['user'];
+    }
     ?>
-    <h1>Esta es la agenda de <?php echo $user ;?></h1>
+    <h1>Esta es la agenda de <?php echo $user; ?></h1>
     <form method="POST">
         <label>Nombre:</label><br>
-        <input type="text" name="nombre" placeholder=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?> ><br>
+        <input type="text" name="nombre" placeholder=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?>><br>
         <label>Email:</label><br>
-        <input type="email" name="email" placeholder=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?> ><br>
+        <input type="email" name="email" placeholder=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>><br>
         <input type="submit" />
         <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
-        <input type="hidden" name="user" value=<?php echo $user ;?> />
+        <input type="hidden" name="user" value=<?php echo $user; ?> />
     </form>
     <?php
-    if(isset($_POST['submit'])){
+    if (isset($_POST['submit'])) {
         echo $result;
     }
     $obj->seeArray();
