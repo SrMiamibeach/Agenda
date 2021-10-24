@@ -1,0 +1,1 @@
+En agenda1 a veces falla y se restea la agenda, no se muy bien porque falla no sigue ninguna logia a veces falla a la primera otras  veces no falla.
