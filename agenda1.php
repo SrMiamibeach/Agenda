@@ -118,9 +118,9 @@
     <h1>Esta es la agenda de <?php echo $user ;?></h1>
     <form method="POST">
         <label>Nombre:</label><br>
-        <input type="text" name="nombre" value=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?> ><br>
+        <input type="text" name="nombre" placeholder=<?php echo isset($name) ? $name : ''; ?> ><br>
         <label>Email:</label><br>
-        <input type="email" name="email" value=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?> ><br>
+        <input type="email" name="email" placeholder=<?php echo isset($email) ? $email : ''; ?> ><br>
         <input type="submit" />
         <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
         <input type="hidden" name="user" value=<?php echo $user ;?> />
