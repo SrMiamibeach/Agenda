@@ -18,7 +18,7 @@
             if ($array == null) {
                 $this->agenda = array();
             } else {
-                $this->agenda = json_decode($_POST['array'], true);
+                $this->agenda = (array)json_decode($_POST['array'], true);
             }
         }
         // Añadir un contacto nuevo a la agenda o editar el contacto
@@ -41,7 +41,11 @@
         // comprueba si un nombre existe
         private function keyExist($nombre)
         {
-            $keys = array_keys($this->agenda);
+            try{
+                $keys = array_keys($this->agenda);
+            }catch(Exception $e){
+                return null;
+            }
             foreach ($keys as $key) {
                 if (strtolower($key) == strtolower($nombre)) {
                     return $key;
