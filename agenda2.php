@@ -9,7 +9,7 @@
     <?php
     class agenda2
     {
-        private $agenda = array();
+        private $agenda;
 
         public function __construct($cookie = null)
         {
@@ -25,10 +25,10 @@
         {
             $keyExit = $this->keyExist($nombre);
             $checkEmail = $this->checkEmail($email);
-            if (!$keyExit && $checkEmail) {
+            if ($keyExit == null && $checkEmail) {
                 $this->agenda[$nombre] = $email;
                 return '<h4>Añadido correctamente</h4>';
-            } else if ($keyExit && $checkEmail) {
+            } else if ($keyExit != null && $checkEmail) {
                 $this->agenda[$nombre] = $email;
                 return '<h4>Se a actualizado el correo</h4>';
             } else if (!$checkEmail) {
@@ -43,10 +43,10 @@
             $keys = array_keys($this->agenda);
             foreach ($keys as $key) {
                 if (strtolower($key) == strtolower($nombre)) {
-                    return true;
+                    return $key;
                 }
             }
-            return false;
+            return null;
         }
         // Compruebar el email con funciones de php
         private function checkEmail($email)
@@ -89,10 +89,8 @@
     <?php
     $result = '';
     if(!isset($_COOKIE['agenda'])){
-        echo 'crea';
         $obj = new agenda2();
     }else{
-        echo 'carga';
         $obj = new agenda2(json_decode($_COOKIE['agenda'], true));
         if (empty($_POST['nombre'])) {
             $result = '<h4 style=color:red;>El nombre esta vacio</h4>';
@@ -101,7 +99,6 @@
             if (isset($_POST['email']) && !empty($_POST['email'])) {
                 $email = htmlentities($_POST['email']);
                 $result = $obj->addContact($name, $email);
-                $result =  '<h4>' . $result . '</h4>';
             } else {
                 $result = $obj->deleteContact($name);;
             }
@@ -117,15 +114,14 @@
         $user = htmlentities($_POST['username']);
     } else {
         $user = $_COOKIE['username'];
-        echo $user;
     }
     ?>
     <h1>Esta es la agenda de <?php echo $user; ?></h1>
     <form method="POST">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" />
-        <label>Email</label>
-        <input type="email" name="email" />
+        <label>Nombre:</label><br>
+        <input type="text" name="nombre" placeholder=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?> ><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" placeholder=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?> ><br>
         <input type="submit" name="submit" />
     </form>
     <?php

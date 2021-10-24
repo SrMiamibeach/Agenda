@@ -28,7 +28,7 @@
                 $this->agenda[$nombre] = $email;
                 return '<h4>Añadido correctamente</h4>';
             } else if ($keyExit != null && $checkEmail) {
-                $this->agenda[$keyExit] = $email;
+                $this->agenda[$nombre] = $email;
                 return '<h4>Se a actualizado el correo</h4>';
             } else if (!$checkEmail) {
                 return '<h4>El correo no tiene un formato correcto</h4>';
@@ -99,7 +99,6 @@
             if (isset($_POST['email']) && !empty($_POST['email'])) {
                 $email = htmlentities($_POST['email']);
                 $result = $obj->addContact($name, $email);
-                $result =  '<h4>' . $result . '</h4>';
             } else {
                 $result = $obj->deleteContact($name);;
             }
