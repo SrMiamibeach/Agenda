@@ -27,14 +27,14 @@
             $checkEmail = $this->checkEmail($email);
             if ($keyExit == null && $checkEmail) {
                 $this->agenda[$nombre] = $email;
-                return '<h4>Añadido correctamente</h4>';
+                return '<h4 style=color:green;>Añadido correctamente</h4>';
             } else if ($keyExit != null && $checkEmail) {
-                $this->agenda[$nombre] = $email;
-                return '<h4>Se a actualizado el correo</h4>';
+                $this->agenda[$keyExit] = $email;
+                return '<h4 style=color:green;>Se a actualizado el correo</h4>';
             } else if (!$checkEmail) {
-                return '<h4>El correo no tiene un formato correcto</h4>';
+                return '<h4 style=color:red;>El correo no tiene un formato correcto</h4>';
             } else {
-                return '<h4>Todo mal</h4>';
+                return '<h4 style=color:red;>Todo mal</h4>';
             }
         }
         // comprobar si un nombre existe
@@ -67,9 +67,9 @@
         {
             if ($this->keyExist($name)) {
                 unset($this->agenda[$name]);
-                return '<h4>Contacto eliminado</h4>';
+                return '<h4 style=color:green;>Contacto eliminado</h4>';
             }
-            return '<h4>No existe ese contacto</h4>';
+            return '<h4 style=color:red;>No existe ese contacto</h4>';
         }
         // Pasamos el array a string para añadirlo a una cookie
         public function setAgenda()
@@ -120,6 +120,7 @@
     }
     ?>
     <h1>Esta es la agenda de <?php echo $user; ?></h1>
+    <div id="userform">
     <form method="POST">
         <label>Nombre:</label><br>
         <input type="text" name="nombre" placeholder=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?>><br>
@@ -127,6 +128,7 @@
         <input type="email" name="email" placeholder=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>><br>
         <input type="submit" name="submit" />
     </form>
+    </div>
     <?php
     if (isset($_POST['submit'])) {
         echo $result;

@@ -3,6 +3,8 @@
 
 <head>
     <title>Agenda</title>
+    <link href="main.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body>
@@ -26,14 +28,14 @@
             $checkEmail = $this->checkEmail($email);
             if ($keyExit == null && $checkEmail) {
                 $this->agenda[$nombre] = $email;
-                return '<h4>Añadido correctamente</h4>';
+                return '<h4 style=color:green;>Añadido correctamente</h4>';
             } else if ($keyExit != null && $checkEmail) {
-                $this->agenda[$nombre] = $email;
-                return '<h4>Se a actualizado el correo</h4>';
+                $this->agenda[$keyExit] = $email;
+                return '<h4 style=color:green;>Se a actualizado el correo</h4>';
             } else if (!$checkEmail) {
-                return '<h4>El correo no tiene un formato correcto</h4>';
+                return '<h4 style=color:red;>El correo no tiene un formato correcto</h4>';
             } else {
-                return '<h4>Todo mal</h4>';
+                return '<h4 style=color:red;>Todo mal</h4>';
             }
         }
         // comprueba si un nombre existe
@@ -66,9 +68,9 @@
         {
             if ($this->keyExist($name)) {
                 unset($this->agenda[$name]);
-                return '<h4>Contacto eliminado</h4>';
+                return '<h4 style=color:green;>Contacto eliminado</h4>';
             }
-            return '<h4>No existe ese contacto</h4>';
+            return '<h4 style=color:red;>No existe ese contacto</h4>';
         }
         // Pasamos el array a string para despues poder postearlo en el input 
         public function setAgenda()
@@ -103,7 +105,7 @@
                 $email = htmlentities($_POST['email']);
                 $result = $obj->addContact($name, $email);
             } else {
-                $obj->deleteContact($name);
+                $result = $obj->deleteContact($name);
             }
         }
     }
@@ -118,15 +120,17 @@
     }
     ?>
     <h1>Esta es la agenda de <?php echo $user; ?></h1>
-    <form method="POST">
-        <label>Nombre:</label><br>
-        <input type="text" name="nombre" placeholder=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?>><br>
-        <label>Email:</label><br>
-        <input type="email" name="email" placeholder=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>><br>
-        <input type="submit" />
-        <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
-        <input type="hidden" name="user" value=<?php echo $user; ?> />
-    </form>
+    <div id="userform">
+        <form method="POST">
+            <label>Nombre:</label><br>
+            <input type="text" name="nombre" placeholder=<?php echo isset($_POST['nombre']) ? $_POST['nombre'] : ''; ?>><br>
+            <label>Email:</label><br>
+            <input type="email" name="email" placeholder=<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>><br>
+            <input type="submit" name="submit" />
+            <input type="hidden" name="array" value=<?php echo $obj->setAgenda(); ?> />
+            <input type="hidden" name="user" value=<?php echo $user; ?> />
+        </form>
+    </div>
     <?php
     if (isset($_POST['submit'])) {
         echo $result;
